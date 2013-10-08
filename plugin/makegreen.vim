@@ -27,8 +27,8 @@ if !hlexists('MakeGreenOneErrorBar')
 endif
 if !hlexists('MakeGreenMultipleErrorBar')
     hi MakeGreenMultipleErrorBar
-            \ term=reverse ctermfg=white ctermbg=darkred
-            \ guifg=white guibg=firebrick
+            \ term=reverse ctermfg=yellow ctermbg=red
+            \ gui=bold guifg=yellow guibg=red
 endif
 if !hlexists('MakeGreenDifferentBufferErrorBar')
     hi MakeGreenDifferentBufferErrorBar
