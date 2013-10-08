@@ -230,7 +230,7 @@ function! MakeGreen(flags, compiler_args)
     let simplified_message = s:SimplifyErrorMessage(target_error.error['text'])
 
     if target_error.is_in_current_buffer
-        if len(qf_errors.error_list) > 1 && !IsQuickfixTab()
+        if len(qf_errors.error_list) > 1
             let bar_color = 'MGDarkredBar'
         else
             let bar_color = 'MGRedBar'
