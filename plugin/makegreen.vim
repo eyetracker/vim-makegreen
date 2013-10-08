@@ -15,14 +15,26 @@ if &cp || exists("g:makegreen_loaded") && g:makegreen_loaded
 endif
 let g:makegreen_loaded = 1
 
-hi MakeGreenNoErrorBar term=reverse ctermfg=white ctermbg=green
+if !hlexists('MakeGreenNoErrorBar')
+    hi MakeGreenNoErrorBar
+            \ term=reverse ctermfg=white ctermbg=green
             \ guifg=white guibg=green
-hi MakeGreenOneErrorBar term=reverse ctermfg=white ctermbg=red
+endif
+if !hlexists('MakeGreenOneErrorBar')
+    hi MakeGreenOneErrorBar
+            \ term=reverse ctermfg=white ctermbg=red
             \ guifg=white guibg=red
-hi MakeGreenMultipleErrorBar term=reverse ctermfg=white ctermbg=darkred
+endif
+if !hlexists('MakeGreenMultipleErrorBar')
+    hi MakeGreenMultipleErrorBar
+            \ term=reverse ctermfg=white ctermbg=darkred
             \ guifg=white guibg=firebrick
-hi MakeGreenDifferentBufferErrorBar term=reverse ctermfg=white ctermbg=magenta
+endif
+if !hlexists('MakeGreenDifferentBufferErrorBar')
+    hi MakeGreenDifferentBufferErrorBar
+            \ term=reverse ctermfg=white ctermbg=magenta
             \ guifg=white guibg=magenta
+endif
 
 " ---
 
