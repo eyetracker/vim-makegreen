@@ -289,14 +289,17 @@ function! MakeGreen(flags, compiler_args)
     endif
 
     let message = ''
+    let error_count = 0
     if !empty(request.target_error)
         let message = request.target_error.error['text']
+        let error_count = len(qf_errors.error_list)
         silent exe "cc " . request.target_error.qf_line
     endif
 
     let simplified_message = s:SimplifyErrorMessage(message)
     redraw
     call s:ShowBar(request.bar_color, simplified_message)
+    return error_count
 endfunction
 
 "
