@@ -185,12 +185,12 @@ fun! s:SimplifyErrorMessage(message)
     return error_message
 endfun
 
-function! s:ShowBar(highlight_group, msg)
+fun! s:ShowBar(highlight_group, msg)
     " Display a bar with the message using highlight_group.
     exe "echohl " . a:highlight_group
     echon a:msg repeat(" ", &columns - strlen(a:msg) - 1)
     echohl None
-endfunction
+endfun
 
 " A request messenger for the main function.
 let s:RequestMessenger = {}
@@ -269,7 +269,7 @@ fun! s:ParseCommandFlags(flags, qf_errors)
     return request
 endfun
 
-function! MakeGreen(flags, compiler_args)
+fun! MakeGreen(flags, compiler_args)
     " Execute make with the given compiler_args (a string), display a bar and
     " jump to the error.  By default, prefer errors in the current buffer.  If
     " there is no error in the current buffer open a qf-tab and jump to the
@@ -300,7 +300,7 @@ function! MakeGreen(flags, compiler_args)
     redraw
     call s:ShowBar(request.bar_color, simplified_message)
     return error_count
-endfunction
+endfun
 
 "
 " --- Commands
