@@ -192,11 +192,18 @@ function! s:ShowBar(highlight_group, msg)
     echohl None
 endfunction
 
-function! MakeGreen(flags, compiler_args)
-    " Execute make with the given compiler_args (a string), display a bar and
-    " jump to the error.  By default, prefer errors in the current buffer.  If
-    " there is no error in the current buffer open a qf-tab and jump to the
-    " first error.
+" A request messenger for the main function.
+let s:RequestMessenger = {}
+let s:RequestMessenger.target_error = {}
+let s:RequestMessenger.bar_color = ''
+let s:RequestMessenger.want_new_tab = 0
+let s:RequestMessenger.want_split = 0
+let s:RequestMessenger.want_vsplit = 0
+let s:RequestMessenger.want_suppress_context = 0
+
+fun! s:ParseCommandFlags(flags, qf_errors)
+    " Assemble values and commands for the main function and return
+    " a s:RequestMessenger instance.
     "
     " flags:
     "   C : suppress context, have only errors in the qf buffer -- no context
@@ -205,59 +212,91 @@ function! MakeGreen(flags, compiler_args)
     "   f : jump to the first error instead of the nearest
     "   s : open a split with the origin buffer on a new tab
     "   v : open a vsplit with the origin buffer on a new tab
-    silent! exec "make! " . a:compiler_args
+    let request = deepcopy(s:RequestMessenger)
 
-    let qf_errors = s:QfErrors.New()
-    if empty(qf_errors.error_list)
-        redraw
-        call s:ShowBar('MakeGreenNoErrorBar', '')
-        return
-    endif
-
-    let want_split = 0
-    if a:flags =~# 's'
-        let want_split = 1
+    " short circuit in case of no errors
+    if empty(a:qf_errors.error_list)
+        let request.bar_color = 'MakeGreenNoErrorBar'
+        return request
     endif
 
-    let want_vsplit = 0
-    if a:flags =~# 'v'
-        let want_vsplit = 1
-    endif
-
-    " remove context
-    if a:flags =~# 'C'
-        call qf_errors.SetQfToErrorsOnly()
-    endif
-    " always open on qf-tab
-    if a:flags =~# 't'
-        call s:OpenNewQfTab_cond(want_split, want_vsplit)
-    endif
     " determine target error
     if a:flags =~# 'f'
-        let target_error = qf_errors.error_list[0]
+        let request.target_error = a:qf_errors.error_list[0]
     else
-        let target_error = qf_errors.best_error
+        let request.target_error = a:qf_errors.best_error
     endif
 
-    let simplified_message = s:SimplifyErrorMessage(target_error.error['text'])
-
-    if target_error.is_in_current_buffer
-        if len(qf_errors.error_list) > 1
-            let bar_color = 'MakeGreenMultipleErrorBar'
+    " error bar color and new-tab default
+    if request.target_error.is_in_current_buffer
+        if len(a:qf_errors.error_list) > 1
+            let request.bar_color = 'MakeGreenMultipleErrorBar'
         else
-            let bar_color = 'MakeGreenOneErrorBar'
+            let request.bar_color = 'MakeGreenOneErrorBar'
         endif
+        let request.want_new_tab = 0
     else
-        if a:flags !~# 'T'
-            call s:OpenNewQfTab_cond(want_split, want_vsplit)
-        endif
-        let bar_color = 'MakeGreenDifferentBufferErrorBar'
+        let request.bar_color = 'MakeGreenDifferentBufferErrorBar'
+        let request.want_new_tab = 1
     endif
 
-    silent exe "cc " . target_error.qf_line
-    redraw
-    call s:ShowBar(bar_color, simplified_message)
+    " tab and splits
+    if a:flags =~# 't'
+        let request.want_new_tab = 1
+    elseif a:flags !~# 'T'
+        let request.want_new_tab = 0
+    endif
 
+    if a:flags =~# 's'
+        let request.want_split = 1
+    else
+        let request.want_split = 0
+    endif
+
+    if a:flags =~# 'v'
+        let request.want_vsplit = 1
+    else
+        let request.want_vsplit = 0
+    endif
+
+    " context
+    if a:flags =~# 'C'
+        let request.want_suppress_context = 1
+    else
+        let request.want_suppress_context = 0
+    endif
+
+    return request
+endfun
+
+function! MakeGreen(flags, compiler_args)
+    " Execute make with the given compiler_args (a string), display a bar and
+    " jump to the error.  By default, prefer errors in the current buffer.  If
+    " there is no error in the current buffer open a qf-tab and jump to the
+    " first error.
+    "
+    " For valid flags see s:ParseCommandFlags()
+    silent! exec "make! " . a:compiler_args
+    let qf_errors = s:QfErrors.New()
+    let request = s:ParseCommandFlags(a:flags, qf_errors)
+
+    if request.want_suppress_context
+        call qf_errors.SetQfToErrorsOnly()
+    endif
+
+    if request.want_new_tab
+        call s:OpenNewQfTab_cond(request.want_split, request.want_vsplit)
+    endif
+
+    let message = ''
+    if !empty(request.target_error)
+        let message = request.target_error.error['text']
+        silent exe "cc " . request.target_error.qf_line
+    endif
+
+    let simplified_message = s:SimplifyErrorMessage(message)
+    redraw
+    call s:ShowBar(request.bar_color, simplified_message)
 endfunction
 
 "
