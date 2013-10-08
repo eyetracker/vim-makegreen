@@ -15,13 +15,13 @@ if &cp || exists("g:makegreen_loaded") && g:makegreen_loaded
 endif
 let g:makegreen_loaded = 1
 
-hi MGGreenBar term=reverse ctermfg=white ctermbg=green
+hi MakeGreenNoErrorBar term=reverse ctermfg=white ctermbg=green
             \ guifg=white guibg=green
-hi MGRedBar term=reverse ctermfg=white ctermbg=red
+hi MakeGreenOneErrorBar term=reverse ctermfg=white ctermbg=red
             \ guifg=white guibg=red
-hi MGDarkredBar term=reverse ctermfg=white ctermbg=darkred
+hi MakeGreenMultipleErrorBar term=reverse ctermfg=white ctermbg=darkred
             \ guifg=white guibg=firebrick
-hi MGMagentaBar term=reverse ctermfg=white ctermbg=magenta
+hi MakeGreenDifferentBufferErrorBar term=reverse ctermfg=white ctermbg=magenta
             \ guifg=white guibg=magenta
 
 " ---
@@ -198,7 +198,7 @@ function! MakeGreen(flags, compiler_args)
     let qf_errors = s:QfErrors.New()
     if empty(qf_errors.error_list)
         redraw
-        call s:ShowBar('MGGreenBar', '')
+        call s:ShowBar('MakeGreenNoErrorBar', '')
         return
     endif
 
@@ -231,15 +231,15 @@ function! MakeGreen(flags, compiler_args)
 
     if target_error.is_in_current_buffer
         if len(qf_errors.error_list) > 1
-            let bar_color = 'MGDarkredBar'
+            let bar_color = 'MakeGreenMultipleErrorBar'
         else
-            let bar_color = 'MGRedBar'
+            let bar_color = 'MakeGreenOneErrorBar'
         endif
     else
         if a:flags !~# 'T'
             call s:OpenNewQfTab_cond(want_split, want_vsplit)
         endif
-        let bar_color = 'MGMagentaBar'
+        let bar_color = 'MakeGreenDifferentBufferErrorBar'
     endif
 
     silent exe "cc " . target_error.qf_line
