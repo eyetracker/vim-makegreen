@@ -234,13 +234,17 @@ fun! s:ParseCommandFlags(flags, qf_errors)
         else
             let request.bar_color = 'MakeGreenOneErrorBar'
         endif
-        let request.want_new_tab = 0
     else
         let request.bar_color = 'MakeGreenDifferentBufferErrorBar'
-        let request.want_new_tab = 1
     endif
 
     " tab and splits
+    if request.target_error.is_in_current_buffer
+        let request.want_new_tab = 0
+    else
+        let request.want_new_tab = 1
+    endif
+
     if a:flags =~# 't'
         let request.want_new_tab = 1
     elseif a:flags =~# 'T'
