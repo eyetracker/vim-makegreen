@@ -243,7 +243,7 @@ fun! s:ParseCommandFlags(flags, qf_errors)
     " tab and splits
     if a:flags =~# 't'
         let request.want_new_tab = 1
-    elseif a:flags !~# 'T'
+    elseif a:flags =~# 'T'
         let request.want_new_tab = 0
     endif
 
