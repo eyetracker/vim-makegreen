@@ -134,49 +134,44 @@ Or more conservatively:
 <
 
 
-Configuration                                     *makegreen-configuration*
+Functions                                            *makegreen-functions*
 ===========================================================================
 
-Options~
+MakeGreen({flags}, {compargs})                               *MakeGreen()*
+                Execute the compiler with {compargs} inserted in place of
+                $* in |makeprg|.  Return the number of errors found.
 
-Set the following variable in ~/.vimrc to control the behaviour of
-MakeGreen.
+                By default, jump to the nearest error in the current file.
+                If there is no error in the current file, open a new tab
+                and display the quickfix window.
 
-                                                 *g:makegreen_stay_on_file*
-g:makegreen_stay_on_file    booleen (default 0)
-                            If set to 1, cursor won't jump to the first
-                            error when test failed.
+                Specify a string of character flags to influence the
+                behavior:
+                'C'   suppress context, have only errors in the qf buffer
+                't'   always open on qf-tab in case of errors
+                'T'   never open another tab; always jump in current window
+                'f'   jump to the first error instead of the nearest
+                's'   open a split with the origin buffer on a new tab
+                'v'   open a vsplit with the origin buffer on a new tab
 
-Style~
+Configuration                                    *makegreen-configuration*
+===========================================================================
 
-You can configure how the red/green bar looks like with Vim's |:highlight|
-command. But at this moment you have to configure it after the
-plugin/makegreen.vim is loaded. You can make use of vim's |after-directory|
-functionality to achieve this.
+Bar~
 
-An example of ~/.vim/after/plugin/makegreen.vim looks like this:
->
-    " The green bar looks pretty bright on my terminal.
-    " So I have to set foreground color as black.
-    hi GreenBar term=reverse ctermfg=black ctermbg=green guifg=white guibg=green
-<
+The bar will be displayed in diverse colors:
+green:          no error
+red/white:      one error in the current file
+red/yellow:     further errors -- possibly in different files
+magenta:        jump to an error in a different file
 
-                                                              *hl-GreenBar*
-GreenBar      default:
-                term=reverse
-                ctermfg=white ctermbg=green
-                guifg=white guibg=green
+You can override these default colors from your configuration if you define
+the following highlight-groups:
 
-              Style used for the green bar.
-
-                                                                *hl-RedBar*
-RedBar        default:
-                term=reverse
-                ctermfg=white ctermbg=red
-                guifg=white guibg=red
-
-              Style used for the red bar.
-
+MakeGreenNoErrorBar
+MakeGreenOneErrorBar
+MakeGreenMultipleErrorBar
+MakeGreenDifferentBufferErrorBar
 
 Feedback                                               *makegreen-feedback*
 ===========================================================================
@@ -207,6 +202,7 @@ Contributors                                       *makegreen-contributors*
 
 Rein Henrichs
 Gary Bernhardt
+Dirk Wallenstein
 
 
 License                                                 *makegreen-license*
