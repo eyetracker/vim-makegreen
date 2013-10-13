@@ -27,6 +27,8 @@ argument to `MakeGreen()`.
 - `f` jump to the first error instead of the nearest error (eg: unittest versus
   compilation).  By default the error in the current buffer that is the nearest
   to the cursor position will be jumped to.
+- `J` do not jump at all and do not open a new tab unless explicitly requested
+  (execute tests from the System-Under-Test without opening the test file)
 
 Further flags concern the opening of a new tab.  The default behavior is useful
 if you use quickfix tabs as special throwaway tabs:  A new tab will be opened
@@ -44,7 +46,7 @@ The bar will be displayed in diverse colors:
 - green: no error
 - red/white: one error in the current file
 - red/yellow: further errors -- possibly in different files
-- magenta: jump to an error in a different file
+- magenta: error is in a different file
 
 You can override these default colors from your configuration if you define
 the following highlight-groups:

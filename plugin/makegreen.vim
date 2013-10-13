@@ -196,6 +196,7 @@ endfun
 let s:RequestMessenger = {}
 let s:RequestMessenger.target_error = {}
 let s:RequestMessenger.bar_color = ''
+let s:RequestMessenger.want_jump = 0
 let s:RequestMessenger.want_new_tab = 0
 let s:RequestMessenger.want_split = 0
 let s:RequestMessenger.want_vsplit = 0
@@ -212,6 +213,7 @@ fun! s:ParseCommandFlags(flags, qf_errors)
     "   f : jump to the first error instead of the nearest
     "   s : open a split with the origin buffer on a new tab
     "   v : open a vsplit with the origin buffer on a new tab
+    "   J : never jump at all, will not open tab unless 't'
     let request = deepcopy(s:RequestMessenger)
 
     " short circuit in case of no errors
@@ -238,10 +240,16 @@ fun! s:ParseCommandFlags(flags, qf_errors)
         let request.bar_color = 'MakeGreenDifferentBufferErrorBar'
     endif
 
-    " tab and splits
-    if request.target_error.is_in_current_buffer
-        let request.want_new_tab = 0
+    " jump
+    if a:flags =~# 'J'
+        let request.want_jump = 0
     else
+        let request.want_jump = 1
+    endif
+
+    " tab and splits
+    let request.want_new_tab = 0
+    if !request.target_error.is_in_current_buffer && request.want_jump
         let request.want_new_tab = 1
     endif
 
@@ -297,7 +305,9 @@ fun! MakeGreen(flags, compiler_args)
     if !empty(request.target_error)
         let message = request.target_error.error['text']
         let error_count = len(qf_errors.error_list)
-        silent exe "cc " . request.target_error.qf_line
+        if request.want_jump
+            silent exe "cc " . request.target_error.qf_line
+        endif
     endif
 
     let simplified_message = s:SimplifyErrorMessage(message)

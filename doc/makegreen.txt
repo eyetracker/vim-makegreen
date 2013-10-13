@@ -148,6 +148,7 @@ MakeGreen({flags}, {compargs})                               *MakeGreen()*
                 Specify a string of character flags to influence the
                 behavior:
                 'C'   suppress context, have only errors in the qf buffer
+                'J'   never jump at all, will not open tab unless 't'
                 't'   always open on qf-tab in case of errors
                 'T'   never open another tab; always jump in current window
                 'f'   jump to the first error instead of the nearest
@@ -163,7 +164,7 @@ The bar will be displayed in diverse colors:
 green:          no error
 red/white:      one error in the current file
 red/yellow:     further errors -- possibly in different files
-magenta:        jump to an error in a different file
+magenta:        error is in a different file
 
 You can override these default colors from your configuration if you define
 the following highlight-groups:
