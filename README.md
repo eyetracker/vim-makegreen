@@ -46,7 +46,8 @@ The bar will be displayed in diverse colors:
 - green: no error
 - red/white: one error in the current file
 - red/yellow: further errors -- possibly in different files
-- magenta: error is in a different file
+- magenta/white: one error in a different file
+- magenta/yellow: multiple errors, target error in a different file
 
 You can override these default colors from your configuration if you define
 the following highlight-groups:
@@ -55,6 +56,7 @@ the following highlight-groups:
     MakeGreenOneErrorBar
     MakeGreenMultipleErrorBar
     MakeGreenDifferentBufferErrorBar
+    MakeGreenDifferentBufferMultipleErrorBar
 
 ### Examples
 A mapping to execute the compiler on the current file and suppress context:

@@ -23,7 +23,7 @@ endif
 if !hlexists('MakeGreenOneErrorBar')
     hi MakeGreenOneErrorBar
             \ term=reverse ctermfg=white ctermbg=red
-            \ guifg=white guibg=red
+            \ gui=none guifg=white guibg=red
 endif
 if !hlexists('MakeGreenMultipleErrorBar')
     hi MakeGreenMultipleErrorBar
@@ -33,7 +33,12 @@ endif
 if !hlexists('MakeGreenDifferentBufferErrorBar')
     hi MakeGreenDifferentBufferErrorBar
             \ term=reverse ctermfg=white ctermbg=magenta
-            \ guifg=white guibg=magenta
+            \ gui=none guifg=white guibg=DarkMagenta
+endif
+if !hlexists('MakeGreenDifferentBufferMultipleErrorBar')
+    hi MakeGreenDifferentBufferMultipleErrorBar
+            \ term=reverse ctermfg=white ctermbg=magenta
+            \ gui=bold guifg=yellow guibg=DarkMagenta
 endif
 
 " ---
@@ -237,7 +242,11 @@ fun! s:ParseCommandFlags(flags, qf_errors)
             let request.bar_color = 'MakeGreenOneErrorBar'
         endif
     else
-        let request.bar_color = 'MakeGreenDifferentBufferErrorBar'
+        if len(a:qf_errors.error_list) > 1
+            let request.bar_color = 'MakeGreenDifferentBufferMultipleErrorBar'
+        else
+            let request.bar_color = 'MakeGreenDifferentBufferErrorBar'
+        endif
     endif
 
     " jump
