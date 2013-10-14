@@ -55,7 +55,7 @@ the following highlight-groups:
     MakeGreenNoErrorBar
     MakeGreenOneErrorBar
     MakeGreenMultipleErrorBar
-    MakeGreenDifferentBufferErrorBar
+    MakeGreenDifferentBufferOneErrorBar
     MakeGreenDifferentBufferMultipleErrorBar
 
 ### Examples
