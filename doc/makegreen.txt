@@ -154,6 +154,8 @@ MakeGreen({flags}, {compargs})                               *MakeGreen()*
                 'f'   jump to the first error instead of the nearest
                 's'   open a split with the origin buffer on a new tab
                 'v'   open a vsplit with the origin buffer on a new tab
+                'm'   always use the main bar colors, never the different
+                      buffer bars
 
 Configuration                                    *makegreen-configuration*
 ===========================================================================

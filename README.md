@@ -29,6 +29,9 @@ argument to `MakeGreen()`.
   to the cursor position will be jumped to.
 - `J` do not jump at all and do not open a new tab unless explicitly requested
   (execute tests from the System-Under-Test without opening the test file)
+- `m` always use the main bar colors, never the different buffer bars.  In
+  combination with `J`, for example, this allows you to use the different-buffer
+  bars exclusively as a jump notification.
 
 Further flags concern the opening of a new tab.  The default behavior is useful
 if you use quickfix tabs as special throwaway tabs:  A new tab will be opened

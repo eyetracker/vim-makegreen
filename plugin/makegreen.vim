@@ -219,6 +219,7 @@ fun! s:ParseCommandFlags(flags, qf_errors)
     "   s : open a split with the origin buffer on a new tab
     "   v : open a vsplit with the origin buffer on a new tab
     "   J : never jump at all, will not open tab unless 't'
+    "   m : always use the main bar colors, never the different buffer bars
     let request = deepcopy(s:RequestMessenger)
 
     " short circuit in case of no errors
@@ -235,7 +236,7 @@ fun! s:ParseCommandFlags(flags, qf_errors)
     endif
 
     " error bar color and new-tab default
-    if request.target_error.is_in_current_buffer
+    if request.target_error.is_in_current_buffer || a:flags =~# 'm'
         if len(a:qf_errors.error_list) > 1
             let request.bar_color = 'MakeGreenMultipleErrorBar'
         else
