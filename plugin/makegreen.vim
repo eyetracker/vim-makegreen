@@ -251,11 +251,7 @@ fun! s:ParseCommandFlags(flags, qf_errors)
     endif
 
     " jump
-    if a:flags =~# 'J'
-        let request.want_jump = 0
-    else
-        let request.want_jump = 1
-    endif
+    let request.want_jump = a:flags =~# 'J' ? 0 : 1
 
     " tab and splits
     let request.want_new_tab = 0
@@ -269,24 +265,11 @@ fun! s:ParseCommandFlags(flags, qf_errors)
         let request.want_new_tab = 0
     endif
 
-    if a:flags =~# 's'
-        let request.want_split = 1
-    else
-        let request.want_split = 0
-    endif
-
-    if a:flags =~# 'v'
-        let request.want_vsplit = 1
-    else
-        let request.want_vsplit = 0
-    endif
+    let request.want_split = a:flags =~# 's' ? 1 : 0
+    let request.want_vsplit = a:flags =~# 'v' ? 1 : 0
 
     " context
-    if a:flags =~# 'C'
-        let request.want_suppress_context = 1
-    else
-        let request.want_suppress_context = 0
-    endif
+    let request.want_suppress_context = a:flags =~# 'C' ? 1 : 0
 
     return request
 endfun
