@@ -175,6 +175,7 @@ fun! s:OpenNewQfTab_cond(want_split, want_vsplit)
         vsplit
     endif
     copen
+    silent doautocmd QuickFixCmdPost MakeGreen
     wincmd p
 endfun
 
@@ -281,6 +282,7 @@ fun! MakeGreen(flags, compiler_args)
     " first error.
     "
     " For valid flags see s:ParseCommandFlags()
+    silent doautocmd QuickFixCmdPre MakeGreen
     silent! exec "make! " . a:compiler_args
     let qf_errors = s:QfErrors.New()
     let request = s:ParseCommandFlags(a:flags, qf_errors)
