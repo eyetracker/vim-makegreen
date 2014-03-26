@@ -165,9 +165,9 @@ endfun
 fun! s:OpenNewQfTab_cond(want_split, want_vsplit)
     " Open a new tab with the quickfix window open.  Open a vsplit if
     " a:want_split is true.
-    if IsQuickfixTab()
-        return
-    endif
+    " if IsQuickfixTab()
+    "     return
+    " endif
     tab sp
     if a:want_split
         split
